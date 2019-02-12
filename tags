@@ -1,0 +1,20 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BUFSIZE	getAdapterInfo.c	3;"	d	file:
+GetGateway_info	getAdapterInfo.c	/^int GetGateway_info(char *getRouteIp, char *getRouteMac) {$/;"	f
+GetIpScan_Thread	getTargetIpScan.c	/^int GetIpScan_Thread() {$/;"	f
+GetMyAdapter_info	getAdapterInfo.c	/^int GetMyAdapter_info(char *device_name, char *getMyIp, char *getMyMac) {$/;"	f
+gw_info	getAdapterInfo.h	/^struct gw_info {$/;"	s
+ip	getAdapterInfo.h	/^    uint32_t ip;$/;"	m	struct:gw_info
+mac	getAdapterInfo.h	/^    char mac[ETHER_ADDR_LEN];$/;"	m	struct:gw_info
+main	mainArpSpoofing.c	/^int main() {$/;"	f
+pThreadRun	getTargetIpScan.c	/^void *pThreadRun() {$/;"	f
+parse_neigh	getAdapterInfo.c	/^void parse_neigh(struct nlmsghdr *nlmsg, void *gw) {$/;"	f
+parse_response	getAdapterInfo.c	/^void parse_response(char *buf, size_t len, void (cb)(struct nlmsghdr *, void *), void *arg) {$/;"	f
+parse_route	getAdapterInfo.c	/^void parse_route(struct nlmsghdr *nlmsg, void *gw) {$/;"	f
+read_res	getAdapterInfo.c	/^int read_res(int sock, char *buf, size_t nlseq) {$/;"	f
+send_req	getAdapterInfo.c	/^int send_req(int sock, char *buf, size_t nlseq, size_t req_type) {$/;"	f
