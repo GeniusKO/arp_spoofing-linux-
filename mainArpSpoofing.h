@@ -1,30 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <pcap.h>
-#include <libnet.h>
-#include <ifaddrs.h>
-#include <linux/netlink.h>
-#include <linux/rtnetlink.h>
-#include <linux/if_ether.h>
-#include <sys/socket.h>
-#include <pthread.h>
-
-#define IP_ADDR_LEN 4
-#define ARP_HDR_LEN 42
-#define BROADCAST_NUM 255
+#include "mainArpHeader.h"
 
 enum {
 	EXIT_OK = 1
 };
 
 typedef unsigned char u_char;
-
-struct AdapterInfo {
-	u_char getMyIpAddress[IP_ADDR_LEN];
-	u_char getRouteIpAddress[IP_ADDR_LEN];
-	u_char getMyMacAddress[ETHER_ADDR_LEN];
-	u_char getRouteMacAddress[ETHER_ADDR_LEN];
-};
 
 struct TargetInfo {
 	struct TargetInfo *next;
@@ -33,11 +13,26 @@ struct TargetInfo {
 	int target_number;
 };
 
-int GetIpScan_Thread(char *setIp, char *setMac, char *setRoute, pcap_t *return_fp);
-int GetArpRelay_Thread(u_char *setMyIp, u_char *setMyMac, u_char *setRouteIp, u_char *setRouteMac, u_char *setTargetIp, u_char *setTargetMac, pcap_t *return_fp);
-int TargetReplyScan(struct libnet_arp_hdr *ah, struct AdapterInfo *info);
+typedef struct ArpSpoofStruct {
+	u_char getMyIp[IP_ADDR_LEN];
+	u_char getMyMac[ETHER_ADDR_LEN];
+	u_char getRouteIp[IP_ADDR_LEN];
+	u_char getRouteMac[ETHER_ADDR_LEN];
+	u_char getTargetIp[IP_ADDR_LEN];
+	u_char getTargetMac[ETHER_ADDR_LEN];
+}_SPOOF;
+
+int GetIpScan_Thread(u_char *setIp, u_char *setMac, u_char *setRoute, pcap_t *return_fp);
+//int GetArpRelay_Thread(void *arp, pcap_t *return_fp);
+
+int TargetReplyScan(struct libnet_arp_hdr *ah);
 int GetGateway_info(u_char *getRouteIp, u_char *getRouteMac);
 int GetMyAdapter_info(char *device_name, u_char *getMyIp, u_char *getMyMac);
 int setPcapExitFlag();
 int setTargetCount();
-void setTargetNumber(int sel_number, u_char *select_target_ip, u_char *select_target_mac);
+int setTargetNumber(int sel_number, u_char *select_target_ip, u_char *select_target_mac);
+
+void SetArpRelayPcapHandle(pcap_t *return_fp);
+void SetArpSniffPcapHandle(pcap_t *return_fp);
+void *GetArpRelay_ThreadRun(void *arguments);
+void *TargetSniffing_ThreadRun(void *arguments);

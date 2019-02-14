@@ -10,7 +10,7 @@ struct gw_info {
 int GetMyAdapter_info(char *device_name, u_char *getMyIp, u_char *getMyMac) {
 	struct ifaddrs *ifaddr, *ifa;
 	struct sockaddr *mac_addr, *ip_addr;	
-	unsigned char *ptr;
+	u_char *ptr;
 	int count = 0;
 
 	if(getifaddrs(&ifaddr) < 0) {
@@ -33,7 +33,7 @@ int GetMyAdapter_info(char *device_name, u_char *getMyIp, u_char *getMyMac) {
 	}
 
 	freeifaddrs(ifaddr);
-	return 0;
+	return 1;
 }
 
 int send_req(int sock, char *buf, size_t nlseq, size_t req_type) {
@@ -69,14 +69,13 @@ int read_res(int sock, char *buf, size_t nlseq) {
         buf += len;
         total_len += len;
         if ((nlmsg->nlmsg_flags & NLM_F_MULTI) == 0) break;
-    } while (nlmsg->nlmsg_seq != nlseq || nlmsg->nlmsg_pid != getpid());
+    } while (nlmsg->nlmsg_seq != nlseq || nlmsg->nlmsg_pid != (unsigned)getpid());
     return total_len;
 }
 
 void parse_route(struct nlmsghdr *nlmsg, void *gw) {
 	struct rtmsg *rtmsg;
     struct rtattr *attr;
-    uint32_t gw_tmp;
     size_t len;
     struct gw_info *info;
 
@@ -142,7 +141,7 @@ void getChangeIp(char *ip_addr, u_char *ip) {
 				break;
 		}
 		cnt = i + 1;
-		sprintf(&ip[j], "%c", tmp);
+		sprintf((char *)&ip[j], "%c", tmp);
 	}
 }
 
@@ -174,6 +173,6 @@ int GetGateway_info(u_char *getRouteIp, u_char *getRouteMac) {
 	if(inet_ntop(AF_INET, &gw.ip, ipbuff, sizeof(ipbuff)) == NULL) return -1;
 	else getChangeIp(ipbuff, getRouteIp);
 	if(gw.mac) for(count = 0; count < ETHER_ADDR_LEN; count++) *(getRouteMac + count) = gw.mac[count];
-	return 0;
+	return 1;
 }
 

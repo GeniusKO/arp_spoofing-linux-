@@ -4,17 +4,67 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ARP_HDR_LEN	mainArpSpoofing.h	13;"	d
+AdapterInfo	mainArpSpoofing.h	/^struct AdapterInfo {$/;"	s
+ArpRelayStruct	arpPacketRelay.c	/^typedef struct ArpRelayStruct {$/;"	s	file:
+ArpRouteReply	arpPacketRelay.c	/^int ArpRouteReply(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *TargetIp) {$/;"	f
+ArpRouteRequest	arpPacketRelay.c	/^int ArpRouteRequest(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *TargetIp) {$/;"	f
+ArpTargetReply	arpPacketRelay.c	/^int ArpTargetReply(u_char *MyMac, u_char *RouteIp, u_char *TargetIp, u_char *TargetMac) {$/;"	f
+ArpTargetRequest	arpPacketRelay.c	/^int ArpTargetRequest(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *TargetIp, u_char *TargetMac) {$/;"	f
+BROADCAST_NUM	mainArpSpoofing.h	14;"	d
 BUFSIZE	getAdapterInfo.c	3;"	d	file:
-GetGateway_info	getAdapterInfo.c	/^int GetGateway_info(char *getRouteIp, char *getRouteMac) {$/;"	f
-GetIpScan_Thread	getTargetIpScan.c	/^int GetIpScan_Thread() {$/;"	f
-GetMyAdapter_info	getAdapterInfo.c	/^int GetMyAdapter_info(char *device_name, char *getMyIp, char *getMyMac) {$/;"	f
-gw_info	getAdapterInfo.h	/^struct gw_info {$/;"	s
-ip	getAdapterInfo.h	/^    uint32_t ip;$/;"	m	struct:gw_info
-mac	getAdapterInfo.h	/^    char mac[ETHER_ADDR_LEN];$/;"	m	struct:gw_info
+DUP_FOUND	getTargetIpScan.c	/^	DUP_FOUND = 1$/;"	e	enum:__anon2	file:
+EXIT_OK	mainArpSpoofing.h	/^	EXIT_OK = 1$/;"	e	enum:__anon1
+GetArpRelay_Thread	arpPacketRelay.c	/^int GetArpRelay_Thread(u_char *setMyIp, u_char *setMyMac, u_char *setRouteIp, u_char *setRouteMac, u_char *setTargetIp, u_char *setTargetMac, pcap_t *return_fp) {$/;"	f
+GetArpRelay_ThreadRun	arpPacketRelay.c	/^void *GetArpRelay_ThreadRun(void *arguments) {$/;"	f
+GetGateway_info	getAdapterInfo.c	/^int GetGateway_info(u_char *getRouteIp, u_char *getRouteMac) {$/;"	f
+GetIpScan_Thread	getTargetIpScan.c	/^int GetIpScan_Thread(char *setIp, char *setMac, char *setRoute, pcap_t *return_fp) {$/;"	f
+GetIpScan_ThreadRun	getTargetIpScan.c	/^void *GetIpScan_ThreadRun(void *arguments) {$/;"	f
+GetMyAdapter_info	getAdapterInfo.c	/^int GetMyAdapter_info(char *device_name, u_char *getMyIp, u_char *getMyMac) {$/;"	f
+IP_ADDR_LEN	mainArpSpoofing.h	12;"	d
+PrintTargetArray	getTargetIpScan.c	/^int PrintTargetArray() {$/;"	f
+RELAY	arpPacketRelay.c	/^} RELAY;$/;"	t	typeref:struct:ArpRelayStruct	file:
+TargetInfo	mainArpSpoofing.h	/^struct TargetInfo {$/;"	s
+TargetReplyScan	getTargetIpScan.c	/^int TargetReplyScan(struct libnet_arp_hdr *ah, struct AdapterInfo *info) {$/;"	f
+arg_struct	getTargetIpScan.c	/^struct arg_struct {	$/;"	s	file:
+broadcast_count	getTargetIpScan.c	/^int broadcast_count = 0;$/;"	v
+dupFlag	getTargetIpScan.c	/^int dupFlag = 0;$/;"	v
+fp	arpPacketRelay.c	/^pcap_t *fp;$/;"	v
+fp	getTargetIpScan.c	/^pcap_t *fp;$/;"	v
+getChangeIp	getAdapterInfo.c	/^void getChangeIp(char *ip_addr, u_char *ip) {$/;"	f
+getMyIp	arpPacketRelay.c	/^	u_char getMyIp[IP_ADDR_LEN];$/;"	m	struct:ArpRelayStruct	file:
+getMyIpAddress	mainArpSpoofing.h	/^	u_char getMyIpAddress[IP_ADDR_LEN];$/;"	m	struct:AdapterInfo
+getMyMac	arpPacketRelay.c	/^	u_char getMyMac[ETHER_ADDR_LEN];$/;"	m	struct:ArpRelayStruct	file:
+getMyMacAddress	mainArpSpoofing.h	/^	u_char getMyMacAddress[ETHER_ADDR_LEN];$/;"	m	struct:AdapterInfo
+getRouteIp	arpPacketRelay.c	/^	u_char getRouteIp[IP_ADDR_LEN];$/;"	m	struct:ArpRelayStruct	file:
+getRouteIpAddress	mainArpSpoofing.h	/^	u_char getRouteIpAddress[IP_ADDR_LEN];$/;"	m	struct:AdapterInfo
+getRouteMac	arpPacketRelay.c	/^	u_char getRouteMac[ETHER_ADDR_LEN];$/;"	m	struct:ArpRelayStruct	file:
+getRouteMacAddress	mainArpSpoofing.h	/^	u_char getRouteMacAddress[ETHER_ADDR_LEN];$/;"	m	struct:AdapterInfo
+getTargetIp	arpPacketRelay.c	/^	u_char getTargetIp[IP_ADDR_LEN];$/;"	m	struct:ArpRelayStruct	file:
+getTargetMac	arpPacketRelay.c	/^	u_char getTargetMac[ETHER_ADDR_LEN];$/;"	m	struct:ArpRelayStruct	file:
+gw_info	getAdapterInfo.c	/^struct gw_info {$/;"	s	file:
+head	getTargetIpScan.c	/^struct TargetInfo *head;$/;"	v	typeref:struct:TargetInfo
+ip	getAdapterInfo.c	/^    uint32_t ip;$/;"	m	struct:gw_info	file:
+ipscan	getTargetIpScan.c	/^typedef struct arg_struct ipscan;$/;"	t	typeref:struct:arg_struct	file:
+mac	getAdapterInfo.c	/^    char mac[ETHER_ADDR_LEN];$/;"	m	struct:gw_info	file:
 main	mainArpSpoofing.c	/^int main() {$/;"	f
-pThreadRun	getTargetIpScan.c	/^void *pThreadRun() {$/;"	f
+next	mainArpSpoofing.h	/^	struct TargetInfo *next;$/;"	m	struct:TargetInfo	typeref:struct:TargetInfo::TargetInfo
 parse_neigh	getAdapterInfo.c	/^void parse_neigh(struct nlmsghdr *nlmsg, void *gw) {$/;"	f
 parse_response	getAdapterInfo.c	/^void parse_response(char *buf, size_t len, void (cb)(struct nlmsghdr *, void *), void *arg) {$/;"	f
 parse_route	getAdapterInfo.c	/^void parse_route(struct nlmsghdr *nlmsg, void *gw) {$/;"	f
+popen_comm_func	common_func.c	/^int popen_comm_func(char *cmd, char *buf, size_t buf_len) {$/;"	f
 read_res	getAdapterInfo.c	/^int read_res(int sock, char *buf, size_t nlseq) {$/;"	f
 send_req	getAdapterInfo.c	/^int send_req(int sock, char *buf, size_t nlseq, size_t req_type) {$/;"	f
+setExitFlag	getTargetIpScan.c	/^int setExitFlag = 0;$/;"	v
+setIpAddress	getTargetIpScan.c	/^	char setIpAddress[IP_ADDR_LEN];$/;"	m	struct:arg_struct	file:
+setMacAddress	getTargetIpScan.c	/^	char setMacAddress[ETHER_ADDR_LEN];$/;"	m	struct:arg_struct	file:
+setPcapExitFlag	getTargetIpScan.c	/^int setPcapExitFlag() {$/;"	f
+setRouteAddress	getTargetIpScan.c	/^	char setRouteAddress[IP_ADDR_LEN];$/;"	m	struct:arg_struct	file:
+setTargetCount	getTargetIpScan.c	/^int setTargetCount() {$/;"	f
+setTargetNumber	getTargetIpScan.c	/^void setTargetNumber(int sel_number, u_char *select_target_ip, u_char *select_target_mac) {$/;"	f
+target_array	getTargetIpScan.c	/^struct TargetInfo target_array[BROADCAST_NUM];$/;"	v	typeref:struct:TargetInfo
+target_count	getTargetIpScan.c	/^int target_count = 0;$/;"	v
+target_ip	mainArpSpoofing.h	/^	u_char target_ip[IP_ADDR_LEN];$/;"	m	struct:TargetInfo
+target_mac	mainArpSpoofing.h	/^	u_char target_mac[ETHER_ADDR_LEN];	$/;"	m	struct:TargetInfo
+target_number	mainArpSpoofing.h	/^	int target_number;$/;"	m	struct:TargetInfo
+u_char	mainArpSpoofing.h	/^typedef unsigned char u_char;$/;"	t

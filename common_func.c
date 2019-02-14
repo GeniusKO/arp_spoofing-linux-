@@ -25,3 +25,38 @@ int popen_comm_func(char *cmd, char *buf, size_t buf_len) {
 
     return len;
 }
+
+int print_info_comm_func(char *name, u_char *ip, u_char *mac, int flag) {
+	int i;
+	char ipbuff[32] = {0,};
+	
+	switch (flag) {
+		case BASIC:
+			printf("%s Ip Address : %s %s Mac Address : ", name, inet_ntop(AF_INET, ip, ipbuff, sizeof(ipbuff)), name);
+			for(i = 0; i < ETHER_ADDR_LEN; i++) {
+				if(i == 5) printf("%02X\n", mac[i]);
+				else printf("%02X:", mac[i]);
+			}
+			break;
+		case START_MY:
+			printf("Start Get My Adapter Information ......................... Success\n");
+			break;
+		case START_ROUTE:
+			printf("Start Get Router Information ............................. Success\n");
+			break;
+		case START_IPSCAN:
+			printf("Start Target IP Scanning Wait A Moment ...........................\n");
+			break;
+		case START_SPOOF:
+			printf("Target Spoofing Success and Start Target Sniffer ......... Success\n");
+			break;
+		case START_RELAY:
+			printf("Start ARP Request and ARP Reply Relay .................... Success\n");
+			break;
+		case POPEN:
+			printf("Start Set IP Forwarding net.ipv4.ip_forward = 1 .......... Success\n");
+			break;
+	}
+
+	return 0;
+}

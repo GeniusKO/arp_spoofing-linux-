@@ -60,10 +60,10 @@ void *GetIpScan_ThreadRun(void *arguments) {
 		*(brod_packet + 1) = ARPOP_REQUEST;
 		brod_packet += sizeof(ah->ar_op);
 		for(i = 0; i < ETHER_ADDR_LEN; i++) *(brod_packet + i) = args->setMacAddress[i];
-		for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_spa); i++, j++) *(brod_packet + i) = args->setIpAddress[j];
+		for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(brod_packet + i) = args->setIpAddress[j];
 		brod_packet += sizeof(ah->ar_sha) + sizeof(ah->ar_spa);
 		for(i = 0; i < ETHER_ADDR_LEN; i++) *(brod_packet + i) = 0x00;
-		for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_tpa) - 1; i++, j++) *(brod_packet + i) = args->setIpAddress[j];
+		for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN - 1; i++, j++) *(brod_packet + i) = args->setIpAddress[j];
 		brod_packet += sizeof(ah->ar_tha) + 3;
 		for(i = 1; i < BROADCAST_NUM; i++) {
 			*(brod_packet) = i;
@@ -83,7 +83,7 @@ out:
 	pthread_exit(NULL);
 }
 
-int GetIpScan_Thread(char *setIp, char *setMac, char *setRoute, pcap_t *return_fp) {
+int GetIpScan_Thread(u_char *setIp, u_char *setMac, u_char *setRoute, pcap_t *return_fp) {
 	pthread_t pThread;
 	ipscan *args = (ipscan *)malloc(sizeof(ipscan));
 	int threadErr, count;
@@ -93,15 +93,15 @@ int GetIpScan_Thread(char *setIp, char *setMac, char *setRoute, pcap_t *return_f
 	for(count = 0; count < ETHER_ADDR_LEN; count++) args->setMacAddress[count] = *(setMac + count);
 	for(count = 0; count < IP_ADDR_LEN; count++) args->setRouteAddress[count] = *(setRoute + count);
 
-	if(threadErr = pthread_create(&pThread, NULL, GetIpScan_ThreadRun, (void *)args)) { 
+	if((threadErr = pthread_create(&pThread, NULL, GetIpScan_ThreadRun, (void *)args)) < 0) { 
 		printf("Thread Err = %d\n", threadErr);
 		return -1;
 	}
 
-	return 0;
+	return 1;
 }
 
-int TargetReplyScan(struct libnet_arp_hdr *ah, struct AdapterInfo *info) {
+int TargetReplyScan(struct libnet_arp_hdr *ah) {
 	int i = 0;
 	if(target_count == 0) {
 		for(i = 0; i < IP_ADDR_LEN; i++) target_array[target_count].target_ip[i] = ah->ar_spa[i];
@@ -111,7 +111,7 @@ int TargetReplyScan(struct libnet_arp_hdr *ah, struct AdapterInfo *info) {
 	} else {
 		head = target_array;
 		while(head) {
-			if(!strcasecmp(head->target_ip, ah->ar_spa)) dupFlag = DUP_FOUND;
+			if(!strcasecmp((const char *)head->target_ip, (const char *)ah->ar_spa)) dupFlag = DUP_FOUND;
 			else head = head->next;
 			if(dupFlag == DUP_FOUND) break;
 		}
@@ -126,7 +126,7 @@ int TargetReplyScan(struct libnet_arp_hdr *ah, struct AdapterInfo *info) {
 }
 
 int PrintTargetArray() {
-	int i = 0, j = 0, k = 0;
+	int i = 0, j = 0;
 	char ipbuff[32] = {0,};
 
 	for(i = 0; i < target_count; i ++) {
@@ -147,9 +147,11 @@ int setTargetCount() {
 	return target_count;
 }
 
-void setTargetNumber(int sel_number, u_char *select_target_ip, u_char *select_target_mac) {
+int setTargetNumber(int sel_number, u_char *select_target_ip, u_char *select_target_mac) {
 	int i = 0, count = 0;
 	count = sel_number - 1;
 	for(i = 0; i < IP_ADDR_LEN; i++) *(select_target_ip + i) = target_array[count].target_ip[i];
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(select_target_mac + i) = target_array[count].target_mac[i];
+
+	return 1;
 }

